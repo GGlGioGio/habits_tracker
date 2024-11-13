@@ -1,0 +1,38 @@
+name: CI
+
+# Указываем, что workflow должен запускаться при пуше или pull request в ветку main
+on:
+  push:
+    branches:
+      - main  # Запуск на пуш в ветку main
+  pull_request:
+    branches:
+      - main  # Запуск при pull request в ветку main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest  # Операционная система для выполнения CI
+
+    steps:
+      # Шаг 1: Клонирование репозитория
+      - name: Checkout repository
+        uses: actions/checkout@v2  # Это действие клонирует ваш репозиторий
+
+      # Шаг 2: Настройка Python
+      - name: Set up Python
+        uses: actions/setup-python@v2  # Настроим нужную версию Python
+        with:
+          python-version: '3.11'  # Указываем используемую версию Python
+
+      # Шаг 3: Установка зависимостей
+      - name: Install dependencies
+        run: |
+          python -m venv venv  # Создаем виртуальное окружение
+          . venv/bin/activate  # Активируем виртуальное окружение
+          pip install -r requirements.txt  # Устанавливаем все зависимости
+
+      # Шаг 4: Запуск тестов
+      - name: Run tests
+        run: |
+          . venv/bin/activate  # Активируем виртуальное окружение
+          pytest  # Запускаем тесты с использованием pytest
